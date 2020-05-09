@@ -43,9 +43,4 @@ resource "aws_security_group" "my_webserver" {
     protocol        = "-1"
     cidr_blocks     = ["0.0.0.0/0"]
    }
-
-  tags = {
-  Name = "WebServer Security Group"
-  Owner = "DmRud"
-  }
 }
