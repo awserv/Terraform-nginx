@@ -1,3 +1,3 @@
 # Terraform-nginx
 # one terraform!
-# lifecycle (поднятие и только потом удаление)
+# lifecycle (create before destroy)
