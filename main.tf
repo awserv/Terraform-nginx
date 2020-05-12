@@ -9,12 +9,12 @@
 
 
 provider "aws" {
-  access_key = ".........."
-  secret_key = ".........."
-   region = "eu-central-1"
+  access_key = "AKIAS4HD3Q445E4HUPB6"
+  secret_key = "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"
+  region = "eu-central-1"
 }
 
-resource "aws_instance" "my_webserver"{
+resource "aws_instance" "sec_group" {
 ami = "ami-0f3a43fbf2d3899f7"
 instance_type = "t2.micro"
 vpc_security_group_ids = ["${aws_security_group.sec_group.id}"]
@@ -23,22 +23,29 @@ lifecycle {
 create_before_destroy = true
 }
 
-user_data = <<E0F
 
+user_data = <<EOF
 #!/bin/bash
+connection {
+    type        = "root"
+    user        = "ubuntu"
+    agent       = false
+    private_key = "${file("~/.ssh/authorized_keys")}"
 apt -y update
 apt -y install nginx
+
 echo "<h2>WebServer with IP: $myip</h2><br>One Terraform!"   > /var/www/html/index.html
 sudo service nginx start
-E0F
+EOF
 
  tags = {
   Name = "terrs"
+  }
  }
-}
+
 
 resource "aws_security_group" "sec_group" {
-  name = "group2"
+  name = "group0"
   description = "second"
 
   ingress {
@@ -53,7 +60,7 @@ resource "aws_security_group" "sec_group" {
     to_port     = 8080
     protocol    = "tcp"
     cidr_blocks = ["0.0.0.0/0"]
-
+   }
     ingress {
     from_port   = 443
     to_port     = 443
